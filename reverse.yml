@@ -1,0 +1,12 @@
+kind: reverse
+name: mydb
+source:
+  database: mysql  # 或 postgres, sqlite3 等
+  conn_str: root:163453@tcp(192.168.5.2:3306)/Permissions?charset=utf8
+targets:
+  - type: codes
+    language: golang
+    output_dir: ./models
+    multiple_files: true  # 每个表生成一个文件
+    table_mapper: snake   # 表名映射规则（snake_case 到 CamelCase）
+    column_mapper: snake  # 列名映射规则
