@@ -19,9 +19,6 @@ func SetSqlite(root string) {
 
 	gormDB = db
 	log.Println("本地sqlite数据库初始化完成")
-
-	SyncFile()
-
 }
 
 func GetSqlite() *gorm.DB {

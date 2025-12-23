@@ -13,3 +13,11 @@ type Role struct {
 	UpdatedAt   time.Time `xorm:"DATETIME"`
 	DeletedAt   time.Time `xorm:"DATETIME"`
 }
+
+/*
+获取表中全部记录到结构体切片
+*/
+func (r *Role) GetAll() (roles []Role, err error) {
+	err = GetEngine().Find(&roles)
+	return roles, err
+}

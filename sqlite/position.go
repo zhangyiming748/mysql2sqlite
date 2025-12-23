@@ -21,3 +21,27 @@ type Position struct {
 	UpdatedAt      time.Time `gorm:"type:DATETIME"`
 	DeletedAt      time.Time `gorm:"type:DATETIME"`
 }
+
+/*
+获取表中全部记录到结构体切片
+*/
+func (p *Position) GetAll() (positions []Position, err error) {
+	err = GetSqlite().Find(&positions).Error
+	return positions, err
+}
+
+/*
+同步表结构到数据库
+*/
+func (p *Position) SyncPosition() error {
+	db := GetSqlite()
+	return db.AutoMigrate(&Position{})
+}
+
+/*
+添加单条记录到数据库
+*/
+func (p *Position) InsertOne() error {
+	db := GetSqlite()
+	return db.Create(p).Error
+}

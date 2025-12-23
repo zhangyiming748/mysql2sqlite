@@ -21,3 +21,10 @@ type Position struct {
 	UpdatedAt      time.Time `xorm:"DATETIME"`
 	DeletedAt      time.Time `xorm:"DATETIME"`
 }
+/*
+获取表中全部记录到结构体切片
+*/
+func (p *Position) GetAll() (positions []Position, err error) {
+	err = GetEngine().Find(&positions)
+	return positions, err
+}

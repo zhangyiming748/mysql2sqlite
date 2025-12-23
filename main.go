@@ -9,8 +9,8 @@ import (
 
 func initConfig() {
 	mc := &mysql.MysqlConfig{
-		DbName:   "tdl",
-		Host:     "192.168.5.2",
+		DbName:   "Permissions",
+		Host:     "192.168.110.68",
 		Password: "163453",
 		Port:     "3306",
 		User:     "root",
@@ -24,16 +24,44 @@ func initConfig() {
 	} else {
 		sqlite.SetSqlite(home)
 	}
+	new(sqlite.Position).SyncPosition()
+	new(sqlite.Role).SyncRole()
 }
 
 func main() {
 	initConfig()
-	var files []mysql.File
-	files = new(mysql.File).GetAllFile()
-	for _, file := range files {
-		log.Println(file.Filename)
-		s := new(sqlite.File)
-		s.Fname = file.Filename
-		s.InsertOne()
+	if roles, err := new(mysql.Role).GetAll(); err != nil {
+		log.Fatalf("%v\n", err)
+	} else {
+		for i, role := range roles {
+			log.Printf("%d:%+v\n", i+1, role)
+			r:=new(sqlite.Role)
+			r.RoleName = role.RoleName
+			r.Description = role.Description
+			if err =r.InsertOne();err!=nil{
+				log.Fatalf("%v\n", err)			}
+		}
+	}
+	if positions, err := new(mysql.Position).GetAll(); err != nil {
+		log.Fatalf("%v\n", err)
+	} else {
+		for i, position := range positions {
+			log.Printf("%d:%+v\n", i+1, position)
+			p:=new(sqlite.Position)
+			p.PositionNumber = position.PositionNumber
+			p.PositionName = position.PositionName
+			p.ParentRole = position.ParentRole
+			p.RoleDesc = position.RoleDesc
+			p.RoleIdentifier = position.RoleIdentifier
+			p.MenuType = position.MenuType
+			p.MenuNode = position.MenuNode
+			p.TCodeDesc = position.TCodeDesc
+			p.IsCoreTCode = position.IsCoreTCode
+			p.NeedDocument = position.NeedDocument
+			p.StorageTable = position.StorageTable
+			if err = p.InsertOne(); err != nil {
+				log.Fatalf("%v\n", err)
+			}
+		}
 	}
 }
